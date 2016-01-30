@@ -16,9 +16,8 @@ public class GitLoader {
     
 	public Boolean getSources(String remotePath){
 		try {
-        	localPath = "C:\\Users\\AnaGissel\\Desktop\\test"; 
+        	this.localPath = getLocalPath(); 
         	this.remotePath = remotePath;
-        	//"https://github.com/gisselFdez/PFE-M2IAGL.git"; 
 			localRepo = new FileRepository(localPath + "/.git");
 			git = new Git(localRepo);
 			
@@ -31,5 +30,10 @@ public class GitLoader {
 			e.printStackTrace();
 			return false;
 		}
+	}
+	
+	private String getLocalPath(){
+		String localPath = System.getProperty("user.dir")+"\\test";
+		return localPath;
 	}
 }
