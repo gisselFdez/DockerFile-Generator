@@ -21,6 +21,10 @@ public class GitLoader {
 			localRepo = new FileRepository(localPath + "/.git");
 			git = new Git(localRepo);
 			
+			//delete the directory if it exists already
+			deleteDirectory(new File(localPath));
+			
+			//clone the repository
 			Git.cloneRepository().setURI(remotePath)
             .setDirectory(new File(localPath)).call();
 			return true;
@@ -35,5 +39,15 @@ public class GitLoader {
 	private String getLocalPath(){
 		String localPath = System.getProperty("user.dir")+"\\test";
 		return localPath;
+	}
+	
+	private void deleteDirectory(File file){
+		File[] contents = file.listFiles();
+	    if (contents != null) {
+	        for (File f : contents) {
+	        	deleteDirectory(f);
+	        }
+	    }
+	    file.delete();
 	}
 }
