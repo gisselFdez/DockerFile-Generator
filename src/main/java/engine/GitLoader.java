@@ -8,12 +8,22 @@ import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.internal.storage.file.FileRepository;
 import org.eclipse.jgit.lib.Repository;
 
+/**
+ * 
+ * @author Ana Gissel
+ *
+ */
 public class GitLoader {
 
 	private String localPath, remotePath;
     private Repository localRepo;
     private Git git;
     
+    /**
+     * Get the sources from a git repository
+     * @param remotePath
+     * @return true if succed
+     */
 	public Boolean getSources(String remotePath){
 		try {
         	this.localPath = getLocalPath(); 
@@ -36,11 +46,19 @@ public class GitLoader {
 		}
 	}
 	
+	/**
+	 * Return the local path where the git repository will be clone
+	 * @return
+	 */
 	private String getLocalPath(){
 		String localPath = System.getProperty("user.dir")+"\\test";
 		return localPath;
 	}
 	
+	/**
+	 * Delete a directory with it's content
+	 * @param file
+	 */
 	private void deleteDirectory(File file){
 		File[] contents = file.listFiles();
 	    if (contents != null) {
