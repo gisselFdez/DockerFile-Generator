@@ -8,19 +8,27 @@ import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.internal.storage.file.FileRepository;
 import org.eclipse.jgit.lib.Repository;
 
-import engine.GitLoader;
+import engine.ProjectLoader;
+import engine.ProjectAnalyser;
 
-public class GeneratorMain {
 
-	
+public class GeneratorMain {	
     
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 		
 		//Get repository sources
-		GitLoader git = new GitLoader();
-        git.getSources("https://github.com/gisselFdez/PFE-M2IAGL.git");
-	    
-	}
-
+		ProjectLoader git = new ProjectLoader();
+        //if(git.getSources("https://github.com/gisselFdez/TestEvol.git")){
+        	ProjectAnalyser analyser = new ProjectAnalyser();
+        	//verify if is a maven project
+        	if(analyser.isMavenProject()){
+        		System.out.println("is mvn");
+        		//get dependencies from pom file
+        		analyser.getDependencies();
+        		//get plugins from pom file
+        		analyser.getPlugins();
+        	}      	
+        //}	    
+	}	
 }

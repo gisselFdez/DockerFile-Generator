@@ -13,7 +13,7 @@ import org.eclipse.jgit.lib.Repository;
  * @author Ana Gissel
  *
  */
-public class GitLoader {
+public class ProjectLoader {
 
 	private String localPath, remotePath;
     private Repository localRepo;

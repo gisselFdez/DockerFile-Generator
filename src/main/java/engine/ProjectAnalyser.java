@@ -15,11 +15,11 @@ import org.w3c.dom.NodeList;
  * @author Ana Gissel
  *
  */
-public class SourceAnalyser {
+public class ProjectAnalyser {
 
 	private String pomPath;
 	
-	public SourceAnalyser(){
+	public ProjectAnalyser(){
 		pomPath ="";
 	}
 	
@@ -65,6 +65,37 @@ public class SourceAnalyser {
 					System.out.println("groupId : " + eElement.getElementsByTagName("groupId").item(0).getTextContent());
 					System.out.println("artifactId : " + eElement.getElementsByTagName("artifactId").item(0).getTextContent());
 					System.out.println("version : " + eElement.getElementsByTagName("version").item(0).getTextContent());					
+				}
+			}
+	    } catch (Exception e) {
+	    	e.printStackTrace();
+	    }
+	}
+	
+	public void getPlugins(){
+		//read dependencies from pom.xml
+		 try {
+			File fXmlFile = new File(pomPath);
+			DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+			DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
+			Document doc = dBuilder.parse(fXmlFile);
+					
+			doc.getDocumentElement().normalize();
+
+			System.out.println("Root element :" + doc.getDocumentElement().getNodeName());					
+			NodeList nList = doc.getElementsByTagName("plugin");
+					
+			System.out.println("----------------------------");
+			for (int temp = 0; temp < nList.getLength(); temp++) {
+				Node nNode = nList.item(temp);						
+				System.out.println("\nCurrent Element :" + nNode.getNodeName());
+						
+				if (nNode.getNodeType() == Node.ELEMENT_NODE) {
+					Element eElement = (Element) nNode;
+					System.out.println("groupId : " + eElement.getElementsByTagName("groupId").item(0).getTextContent());
+					System.out.println("artifactId : " + eElement.getElementsByTagName("artifactId").item(0).getTextContent());
+					if(eElement.getElementsByTagName("version").getLength()!=0)
+						System.out.println("version : " + eElement.getElementsByTagName("version").item(0).getTextContent());					
 				}
 			}
 	    } catch (Exception e) {
