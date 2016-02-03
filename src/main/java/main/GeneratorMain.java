@@ -9,6 +9,7 @@ import org.eclipse.jgit.internal.storage.file.FileRepository;
 import org.eclipse.jgit.lib.Repository;
 
 import engine.ProjectLoader;
+import view.View;
 import engine.ProjectAnalyser;
 
 
@@ -18,8 +19,8 @@ public class GeneratorMain {
 		// TODO Auto-generated method stub
 		
 		//Get repository sources
-		ProjectLoader git = new ProjectLoader();
-        //if(git.getSources("https://github.com/gisselFdez/TestEvol.git")){
+		/*ProjectLoader git = new ProjectLoader();
+        if(git.getSources("https://github.com/gisselFdez/TestEvol.git")){
         	ProjectAnalyser analyser = new ProjectAnalyser();
         	//verify if is a maven project
         	if(analyser.isMavenProject()){
@@ -29,6 +30,9 @@ public class GeneratorMain {
         		//get plugins from pom file
         		analyser.getPlugins();
         	}      	
-        //}	    
+        }*/	   
+		
+		//Create view
+		View view = new View();
 	}	
 }
