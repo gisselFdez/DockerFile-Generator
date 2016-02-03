@@ -27,6 +27,7 @@ public class ProjectAnalyser {
 	private List<Plugin> plugins;
 	private List<List<Plugin>> repeatedPlugins;
 	private static Boolean hasRepeatedPlugins = false;
+	private String mainClass;
 	
 	public ProjectAnalyser(){
 		pomPath ="";
@@ -40,6 +41,10 @@ public class ProjectAnalyser {
 	
 	public List<List<Plugin>> getRepeatedPluginsList() {
 		return this.repeatedPlugins;
+	}
+	
+	public String getMainClassName(){
+		return this.mainClass;
 	}
 
 	/**
@@ -133,6 +138,29 @@ public class ProjectAnalyser {
 	    } catch (Exception e) {
 	    	e.printStackTrace();
 	    	return this.plugins;
+	    }
+	}
+	
+	/**
+	 * Get the main class specified in the pom.xml file
+	 * @return
+	 */
+	public String getMainClass(){
+		this.mainClass="";
+		//read the main class from pom.xml
+		 try {			 
+			File fXmlFile = new File(pomPath);
+			DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+			DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
+			Document doc = dBuilder.parse(fXmlFile);
+				
+			this.mainClass = doc.getElementsByTagName("mainClass").item(0).getTextContent();
+			
+			return this.mainClass;
+			
+	    } catch (Exception e) {
+	    	e.printStackTrace();
+	    	return mainClass;
 	    }
 	}
 	
