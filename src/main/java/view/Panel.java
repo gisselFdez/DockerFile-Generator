@@ -15,6 +15,7 @@ import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import javax.swing.border.TitledBorder;
 
 import engine.ProjectAnalyser;
 import engine.ProjectLoader;
@@ -23,7 +24,7 @@ import model.Plugin;
 import processors.ClassProcessor;
 import spoon.Launcher;
 
-public class Panel extends JPanel{
+public class Panel extends JPanel {
 
 	ProjectAnalyser analyser;
 	ProjectLoader loader;
@@ -43,8 +44,7 @@ public class Panel extends JPanel{
 	 */
 	private void init() {
 	    this.setLayout(new FlowLayout());
-	    this.setPreferredSize(new Dimension(600, 600));
-	    this.setBackground(Color.white);
+	    this.setPreferredSize(new Dimension(550, 450));
 	    
 	    initProjectPanel();
 	    this.add(this.projectPanel);
@@ -55,15 +55,25 @@ public class Panel extends JPanel{
 	 */
 	private void initProjectPanel(){
 		this.projectPanel = new JPanel();
-		this.projectPanel.setPreferredSize(new Dimension(600,100));
+		this.projectPanel.setPreferredSize(new Dimension(550,130));
+		this.projectPanel.setBorder(new TitledBorder("Project Information"));
+		this.projectPanel.setLayout(null);
 		
 		//initialize components
-		JLabel lblProject = new JLabel("Project Information");
+		JLabel lblProject = new JLabel("Project location");
+		lblProject.setBounds(20, 30, 100, 20);
 		JTextField txtProjectpPath = new JTextField("");
 		txtProjectpPath.setPreferredSize(new Dimension(250,20));
+		txtProjectpPath.setBounds(110, 30, 430, 20);
 		JLabel lblType = new JLabel("Type of Project");
+		lblType.setBounds(20, 60, 100, 20);
 		JComboBox cmbType = new JComboBox(new String[]{"Git", "Local project" });
-		JButton btnLoad = new JButton("Load");
+		cmbType.setBounds(110, 60, 100, 20);
+		JLabel lblError = new JLabel("");
+		lblError.setForeground(Color.red);
+		lblError.setBounds(220, 60, 250, 20);
+		JButton btnLoad = new JButton("Load Project");
+		btnLoad.setBounds(110, 90, 100, 30);
 		btnLoad.addActionListener(new ActionListener() {			 
             public void actionPerformed(ActionEvent e)
             {            	
@@ -86,7 +96,13 @@ public class Panel extends JPanel{
                 	if(analyser.isMavenProject()){
                 		initDockerFileConfiguration();                		
                 	} 
-            	}            		
+                	else{
+                		lblError.setText("The project selected is not a Maven project.");
+                	}
+            	} 
+            	else{
+            		lblError.setText("The sources couldn't be loaded.");
+            	}
             }
         });
 		
@@ -96,6 +112,7 @@ public class Panel extends JPanel{
 		this.projectPanel.add(lblType);
 		this.projectPanel.add(cmbType);
 		this.projectPanel.add(btnLoad);
+		this.projectPanel.add(lblError);
 	}
 	
 	/**
@@ -104,7 +121,8 @@ public class Panel extends JPanel{
 	private void initDockerFileConfiguration(){		
 		initPluginPanel();
 		initMainsPanel();
-		initResultsPanel();		
+		initResultsPanel();
+		View.frame.revalidate();
 	}
 	
 	/**
@@ -112,10 +130,12 @@ public class Panel extends JPanel{
 	 */
 	private void initResultsPanel(){
 		this.resultsPanel = new JPanel();
-		this.resultsPanel.setPreferredSize(new Dimension(600,100));
+		this.resultsPanel.setPreferredSize(new Dimension(550,50));
+		this.resultsPanel.setLayout(null);
 		
 		//initialize components
-		JButton btnGenerate = new JButton("Generate");
+		JButton btnGenerate = new JButton("Generate Dockerfile");
+		btnGenerate.setBounds(200, 20, 150, 30);
 		btnGenerate.addActionListener(new ActionListener() {			 
             public void actionPerformed(ActionEvent e)
             {
@@ -147,18 +167,26 @@ public class Panel extends JPanel{
 		
 		if(!repeated.isEmpty()){
 			this.pluginPanel = new JPanel();
-			int height = 30;
-					
+			this.pluginPanel.setLayout(null);
+			this.pluginPanel.setBorder(new TitledBorder("Plugins"));
+			int posy = 60;
+			
+			JLabel lblPlugin = new JLabel("Some plugins on the pom.xml have the same groupId, please select the artifactId you want to include.");			
+			lblPlugin.setBounds(20, 20, 540, 40);
+			this.pluginPanel.add(lblPlugin);
+			
 			JComboBox cmbPlugin;
 			for(List<Plugin> list: repeated){
-				height += 30;
 				cmbPlugin = new JComboBox();
+				cmbPlugin.setBounds(110, posy, 250, 20);
 				for(Plugin s: list){
 					cmbPlugin.addItem(s.getArtifactId());
 				}
 				this.pluginPanel.add(cmbPlugin);
+				posy = posy+30;
 			}	
-			this.pluginPanel.setPreferredSize(new Dimension(600,height));
+			this.pluginPanel.setPreferredSize(new Dimension(550,posy+10));
+			
 			this.add(this.pluginPanel);
 			this.repaint();
 		}		
@@ -174,11 +202,16 @@ public class Panel extends JPanel{
 			List<String> mainsList = runProcessor(); 
 			if(!mainsList.isEmpty()){
 				this.mainsPanel = new JPanel();
-				this.mainsPanel.setPreferredSize(new Dimension(600,100));
+				this.mainsPanel.setPreferredSize(new Dimension(550,100));
+				this.mainsPanel.setBorder(new TitledBorder("Main Class"));
+				this.mainsPanel.setLayout(null);
 				
 				//initialize components
-				JLabel lblMain = new JLabel("Main method");
+				JLabel lblMain = new JLabel("There is no main class specified on the pom.xml file, please select a main class.");			
+				lblMain.setBounds(20, 20, 540, 40);
+				this.mainsPanel.add(lblMain);
 				JComboBox cmbMains = new JComboBox();
+				cmbMains.setBounds(110, 60, 250, 20);
 				
 				for(String main: mainsList){
 					cmbMains.addItem(main);

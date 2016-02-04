@@ -10,18 +10,20 @@ import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
 public class View {
-
-	public View() {
-	    EventQueue.invokeLater(new Runnable() {
+	public static JFrame frame = new JFrame("Dockerfile Generator");
+	
+	public void run(){
+		EventQueue.invokeLater(new Runnable() {
 	      @Override
 	      public void run() {
 	        try {
-	          UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-	        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException ex) {
+	        	UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+	        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | 
+	        		UnsupportedLookAndFeelException ex) {
 	        }
 	        //initialize the main panel
 	        Panel controlPanel = new Panel();
-	        JFrame frame = new JFrame("Dockerfile Generator");
+	        //JFrame frame = new JFrame("Dockerfile Generator");
 	        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	        frame.setLayout(new BorderLayout());
 	        JPanel panel = new JPanel();
@@ -32,7 +34,8 @@ public class View {
 	        frame.pack();
 	        frame.setLocationRelativeTo(null);
 	        frame.setVisible(true);
+	        frame.repaint();
 	      }
-	    });
-	  }
+		});
+	}
 }
