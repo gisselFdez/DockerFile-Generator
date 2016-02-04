@@ -15,22 +15,7 @@ import engine.ProjectAnalyser;
 
 public class GeneratorMain {	
     
-	public static void main(String[] args) {
-		// TODO Auto-generated method stub
-		
-		//Get repository sources
-		/*ProjectLoader git = new ProjectLoader();
-        if(git.getSources("https://github.com/gisselFdez/TestEvol.git")){
-        	ProjectAnalyser analyser = new ProjectAnalyser();
-        	//verify if is a maven project
-        	if(analyser.isMavenProject()){
-        		System.out.println("is mvn");
-        		//get dependencies from pom file
-        		analyser.getDependencies();
-        		//get plugins from pom file
-        		analyser.getPlugins();
-        	}      	
-        }*/	   
+	public static void main(String[] args) {	   
 		
 		//Create view
 		View view = new View();
