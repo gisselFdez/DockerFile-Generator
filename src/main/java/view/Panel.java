@@ -6,6 +6,7 @@ import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,6 +20,8 @@ import engine.ProjectAnalyser;
 import engine.ProjectLoader;
 import model.Dependency;
 import model.Plugin;
+import processors.ClassProcessor;
+import spoon.Launcher;
 
 public class Panel extends JPanel{
 
@@ -63,14 +66,26 @@ public class Panel extends JPanel{
 		JButton btnLoad = new JButton("Load");
 		btnLoad.addActionListener(new ActionListener() {			 
             public void actionPerformed(ActionEvent e)
-            {
+            {            	
+            	Boolean loadedSources = false;
+            	ProjectLoader loader = new ProjectLoader();
+            	//get type of sources
+            	if(cmbType.getSelectedItem().toString().equals("Git")){
+            		//load sources from git
+            		loadedSources = loader.getGitSources(txtProjectpPath.getText());
+            	}
+            	else{
+            		//load local sources
+            	}
+            		
                 //load sources            	
-            	//if(git.getSources(txtProjectpPath.getText())){            		            		
+            	if(loadedSources){   
+            		btnLoad.setEnabled(false);
                 	//verify if is a maven project
                 	if(analyser.isMavenProject()){
                 		initDockerFileConfiguration();                		
                 	} 
-            	//}            		
+            	}            		
             }
         });
 		
@@ -153,20 +168,38 @@ public class Panel extends JPanel{
 	 * Initialize the main panel
 	 */
 	private void initMainsPanel(){
-		//execute Spoon
-		List<String> mainsList = null; //call spoon processor
-		if(mainsList!=null){
-			this.mainsPanel = new JPanel();
-			this.mainsPanel.setPreferredSize(new Dimension(600,100));
-			
-			//initialize components
-			JLabel lblMain = new JLabel("Main method");
-			JComboBox cmbMains = new JComboBox();
-			
-			for(String main: mainsList){
-				cmbMains.addItem(main);
+		//get main from pom file
+		if(analyser.getMainClass().equals("")){
+			//execute Spoon to find a main class			
+			List<String> mainsList = runProcessor(); 
+			if(!mainsList.isEmpty()){
+				this.mainsPanel = new JPanel();
+				this.mainsPanel.setPreferredSize(new Dimension(600,100));
+				
+				//initialize components
+				JLabel lblMain = new JLabel("Main method");
+				JComboBox cmbMains = new JComboBox();
+				
+				for(String main: mainsList){
+					cmbMains.addItem(main);
+				}
+				this.mainsPanel.add(cmbMains);
+				this.add(mainsPanel);
 			}
 		}
+	}
+	
+	/**
+	 * Excutes the spoon processor to find a main class
+	 * @return
+	 */
+	private List<String> runProcessor(){
+		Launcher launcher = new Launcher();
+		ClassProcessor processor = new ClassProcessor();
+		launcher.addProcessor(new ClassProcessor());
+		String path = System.getProperty("user.dir")+"\\test";
+        launcher.run(new String[] {"-i", path, "-x"});
+        return processor.getMainClasses();
 	}
 	
 	/**
