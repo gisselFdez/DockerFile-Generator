@@ -1,6 +1,7 @@
 /bin/
 /target/
 /test/
+/spooned/
 .classpath
 .settings
 .project
