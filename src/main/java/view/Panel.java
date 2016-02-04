@@ -76,6 +76,7 @@ public class Panel extends JPanel{
             	}
             	else{
             		//load local sources
+            		loadedSources = loader.getLocalSources(txtProjectpPath.getText());
             	}
             		
                 //load sources            	

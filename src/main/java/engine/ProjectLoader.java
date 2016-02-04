@@ -2,6 +2,8 @@ package engine;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
@@ -49,11 +51,33 @@ public class ProjectLoader {
 	}
 	
 	/**
+	 * Get the sources from a local path
+	 * @param remotePath
+	 * @return
+	 */
+	public Boolean getLocalSources(String remotePath){		
+		setLocalPath(remotePath); 
+		//verify if the directory exists
+		File f = new File(PathLocation.location);
+		if (f.exists() && f.isDirectory()) 
+		   return true;
+		else 
+			return false;
+     }
+	
+	/**
 	 * Sets the local path where the git repository will be clone
 	 * @return
 	 */
 	private void setLocalPath(){
 		PathLocation.location = System.getProperty("user.dir")+"\\test";
+	}
+	
+	/**
+	 * Sets the local path where the local sources are placed
+	 */
+	private void setLocalPath(String localPath){
+		PathLocation.location = localPath;
 	}
 	
 	/**
