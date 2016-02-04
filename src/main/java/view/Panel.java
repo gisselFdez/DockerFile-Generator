@@ -104,9 +104,7 @@ public class Panel extends JPanel{
 	private void initDockerFileConfiguration(){		
 		initPluginPanel();
 		initMainsPanel();
-		initResultsPanel();
-		//get dependencies from pom file
-		//analyser.getDependencies();		
+		initResultsPanel();		
 	}
 	
 	/**
@@ -128,6 +126,7 @@ public class Panel extends JPanel{
             	List<Plugin> plugins = getPlugins();
             	
             	//get main
+            	String main = getMain();
             	
             	//generate docker file
             }
@@ -187,6 +186,30 @@ public class Panel extends JPanel{
 				this.mainsPanel.add(cmbMains);
 				this.add(mainsPanel);
 			}
+		}
+	}
+	
+	/**
+	 * Returns the main class specified on the pom.xml file,
+	 * if there is no main class specified in the pom.xml class
+	 * it will return the selected class from the mainsPanel
+	 * 
+	 * @return
+	 */
+	private String getMain(){
+		String mainClass = analyser.getMainClass();
+		if(!mainClass.equals(""))
+			return mainClass;
+		else{
+			if(this.mainsPanel!=null){
+				for(Component c:this.mainsPanel.getComponents()){
+					if(c instanceof JComboBox){
+						JComboBox cmb = (JComboBox)c;
+						mainClass = cmb.getSelectedItem().toString();
+					}						
+				}
+			}
+			return mainClass;
 		}
 	}
 	
