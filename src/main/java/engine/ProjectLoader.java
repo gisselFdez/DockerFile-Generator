@@ -8,6 +8,8 @@ import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.internal.storage.file.FileRepository;
 import org.eclipse.jgit.lib.Repository;
 
+import util.PathLocation;
+
 /**
  * 
  * @author Ana Gissel
@@ -15,7 +17,7 @@ import org.eclipse.jgit.lib.Repository;
  */
 public class ProjectLoader {
 
-	private String localPath, remotePath;
+	private String remotePath;
     private Repository localRepo;
     private Git git;
     
@@ -24,19 +26,19 @@ public class ProjectLoader {
      * @param remotePath
      * @return true if succed
      */
-	public Boolean getSources(String remotePath){
+	public Boolean getGitSources(String remotePath){
 		try {
-        	this.localPath = getLocalPath(); 
+        	setLocalPath(); 
         	this.remotePath = remotePath;
-			localRepo = new FileRepository(localPath + "/.git");
+			localRepo = new FileRepository(PathLocation.location + "/.git");
 			git = new Git(localRepo);
 			
 			//delete the directory if it exists already
-			deleteDirectory(new File(localPath));
+			deleteDirectory(new File(PathLocation.location));
 			
 			//clone the repository
 			Git.cloneRepository().setURI(remotePath)
-            .setDirectory(new File(localPath)).call();
+            .setDirectory(new File(PathLocation.location)).call();
 			return true;
 			
 		} catch (IOException | GitAPIException e) {
@@ -47,12 +49,11 @@ public class ProjectLoader {
 	}
 	
 	/**
-	 * Return the local path where the git repository will be clone
+	 * Sets the local path where the git repository will be clone
 	 * @return
 	 */
-	private String getLocalPath(){
-		String localPath = System.getProperty("user.dir")+"\\test";
-		return localPath;
+	private void setLocalPath(){
+		PathLocation.location = System.getProperty("user.dir")+"\\test";
 	}
 	
 	/**
