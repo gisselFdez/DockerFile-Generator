@@ -5,8 +5,9 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Date;
+import java.util.List;
 
-import org.eclipse.jgit.ignore.internal.Strings;
+import main.java.model.Plugin;
 
 public class FileCreator {
 
@@ -23,10 +24,12 @@ public class FileCreator {
 	private static String Docker_cmd = "CMD [\"/bin/bash\"]";
 
 	private String volume;
+	private List<Plugin> plugins;
 
-	public FileCreator() {
+	public FileCreator(List<Plugin> plugins) {
 		this.file = new File(path + filename);
-
+		this.plugins = plugins;
+		
 		try {
 			if (file.exists()) {
 				file.delete();
@@ -42,7 +45,11 @@ public class FileCreator {
 		}
 	}
 
-	public void createDockerfile() {
+	public void createDockerfile(String gitURL, String pathToPom, String war) {
+		String split[] = gitURL.split("/");
+		String projectName = split[split.length-1];
+		projectName = projectName.substring(0, projectName.indexOf("."));
+		
 		try {
 			BufferedWriter output = new BufferedWriter(new FileWriter(this.file));
 
@@ -59,6 +66,10 @@ public class FileCreator {
 			output.write(createVolume("wd"));
 			output.write(newLine());
 			output.write(createWorkingDirectory());
+			output.write(newLine());
+			output.write(createGitCloneCommand(gitURL));
+			output.write(newLine());
+			output.write(generateWar(projectName, pathToPom, war));
 			output.write(newLine());
 			output.write(createCmd());
 
@@ -95,12 +106,23 @@ public class FileCreator {
 	}
 
 	private String createUpdateAndInstallCommand() {
-		return "# Update and install\n"
+		String command = "# Update and install\n"
 				+ Docker_run 
 				+ "\n  export DEBIAN_FRONTEND=noninteractive && \\" // avoid to enter password
 				+ "\n  apt-get update && \\" 
 				+ "\n  apt-get -y upgrade && \\"
 				+ "\n  apt-get install -y vim wget curl git maven "; // install tools
+		
+		if (!this.plugins.isEmpty()) {
+			for (Plugin plugin : this.plugins) {
+				String artifactId = plugin.getArtifactId();
+				if (artifactId.toLowerCase().contains("tomcat")) {
+					command += artifactId.toLowerCase().split("-")[0] + " ";
+				}
+			}
+		}
+		
+		return command;
 	}
 
 	private String createVolume(String volume) {
@@ -118,6 +140,21 @@ public class FileCreator {
 				+ "\nWORKDIR /local/" + this.volume;
 	}
 
+	private String createGitCloneCommand(String url) {
+		return "# Clone the sources from repository\n"
+				+ "RUN git clone " + url;
+	}
+	
+	private String generateWar(String projectName, String pathToPom, String warFileName) {
+		String command = "# Generate and copy war\n" + "RUN ";
+		if (pathToPom != null || pathToPom != "") {
+			command += "cd "+ projectName + "/" + pathToPom + " && ";
+		}
+		command += "mvn clean package -DskipTests && "
+				+ "cp target/" + warFileName + ".war ~/../../var/lib/tomcat7/webapps/";
+		return command;
+	}
+	
 	private String createCmd() {
 		return "# Run terminal"
 				+ "\n" + Docker_cmd;

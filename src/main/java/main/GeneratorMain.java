@@ -1,16 +1,11 @@
-package main;
+package main.java.main;
 
-import java.io.File;
-import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
-import org.eclipse.jgit.api.Git;
-import org.eclipse.jgit.api.errors.GitAPIException;
-import org.eclipse.jgit.internal.storage.file.FileRepository;
-import org.eclipse.jgit.lib.Repository;
-
-import engine.ProjectLoader;
-import view.View;
-import engine.ProjectAnalyser;
+import main.java.generator.FileCreator;
+import main.java.model.Plugin;
+import main.java.view.View;
 
 
 public class GeneratorMain {	
@@ -19,9 +14,14 @@ public class GeneratorMain {
 		
 		//Create view
 		View view = new View();
-		view.run();
+//		view.run();
 		
-		FileCreator fileCreator = new FileCreator();
-		fileCreator.createDockerfile();
+		List<Plugin> plugins = new ArrayList<Plugin>();
+		String gitURL = "https://github.com/gisselFdez/ICSE-2013-TestEvol.git";
+		String pathToPom = "tool/"; // where is the pom.xml file ?
+		String war = "testevol"; // the name of the war file generated
+		
+		FileCreator fileCreator = new FileCreator(plugins);
+		fileCreator.createDockerfile(gitURL, pathToPom, war);
 	}	
 }
