@@ -14,14 +14,14 @@ public class GeneratorMain {
 		
 		//Create view
 		View view = new View();
-//		view.run();
+		view.run();
 		
-		List<Plugin> plugins = new ArrayList<Plugin>();
+		/*List<Plugin> plugins = new ArrayList<Plugin>();
 		String gitURL = "https://github.com/gisselFdez/ICSE-2013-TestEvol.git";
 		String pathToPom = "tool/"; // where is the pom.xml file ?
 		String war = "testevol"; // the name of the war file generated
 		
 		FileCreator fileCreator = new FileCreator(plugins);
-		fileCreator.createDockerfile(gitURL, pathToPom, war);
+		fileCreator.createDockerfile(gitURL, pathToPom, war);*/
 	}	
 }
