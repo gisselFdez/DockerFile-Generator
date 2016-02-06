@@ -84,6 +84,7 @@ public class Panel extends JPanel {
             	//get type of sources
             	if(cmbType.getSelectedItem().toString().equals("Git")){
             		//load sources from git
+            		PathLocation.gitLocation = txtProjectpPath.getText();
             		loadedSources = loader.getGitSources(txtProjectpPath.getText());
             	}
             	else{
@@ -151,7 +152,7 @@ public class Panel extends JPanel {
             	String main = getMain();
             	
             	//generate docker file
-        		String gitURL = PathLocation.location;//"https://github.com/gisselFdez/ICSE-2013-TestEvol.git";
+        		String gitURL = PathLocation.gitLocation;//PathLocation.location;//"https://github.com/gisselFdez/ICSE-2013-TestEvol.git";
         		String pathToPom = PathLocation.pomLocation;// where is the pom.xml file ?
         		String war = analyser.getArtifactId(); // the name of the war file generated
         		
