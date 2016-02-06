@@ -1,4 +1,4 @@
-package main.java.generator;
+package generator;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -7,7 +7,8 @@ import java.io.IOException;
 import java.util.Date;
 import java.util.List;
 
-import main.java.model.Plugin;
+import model.Plugin;
+
 
 public class FileCreator {
 
