@@ -20,5 +20,8 @@ public class GeneratorMain {
 		//Create view
 		View view = new View();
 		view.run();
+		
+		FileCreator fileCreator = new FileCreator();
+		fileCreator.createDockerfile();
 	}	
 }
