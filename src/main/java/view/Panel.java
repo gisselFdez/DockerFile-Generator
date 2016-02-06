@@ -19,10 +19,12 @@ import javax.swing.border.TitledBorder;
 
 import engine.ProjectAnalyser;
 import engine.ProjectLoader;
+import generator.FileCreator;
 import model.Dependency;
 import model.Plugin;
 import processors.ClassProcessor;
 import spoon.Launcher;
+import util.PathLocation;
 
 public class Panel extends JPanel {
 
@@ -149,6 +151,12 @@ public class Panel extends JPanel {
             	String main = getMain();
             	
             	//generate docker file
+        		String gitURL = PathLocation.location;//"https://github.com/gisselFdez/ICSE-2013-TestEvol.git";
+        		String pathToPom = PathLocation.pomLocation;// where is the pom.xml file ?
+        		String war = analyser.getArtifactId(); // the name of the war file generated
+        		
+        		FileCreator fileCreator = new FileCreator(plugins);
+        		fileCreator.createDockerfile(gitURL, pathToPom, war);
             }
         });
 		JLabel lblResult = new JLabel();

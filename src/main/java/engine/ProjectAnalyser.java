@@ -169,6 +169,30 @@ public class ProjectAnalyser {
 	}
 	
 	/**
+	 * Get the main class specified in the pom.xml file
+	 * @return
+	 */
+	public String getArtifactId(){
+		String artifact="";
+		//read the main class from pom.xml
+		 try {			 
+			File fXmlFile = new File(pomPath);
+			DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+			DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
+			Document doc = dBuilder.parse(fXmlFile);
+				
+			if(doc.getElementsByTagName("artifactId").getLength()!=0)
+				artifact = doc.getElementsByTagName("artifactId").item(0).getTextContent();
+			
+			return artifact;
+			
+	    } catch (NullPointerException | ParserConfigurationException | SAXException | IOException e) {
+	    	e.printStackTrace();
+	    	return artifact;
+	    }
+	}
+	
+	/**
 	 * Verify if a plugin is repeated
 	 * @return the list of repeated plugins
 	 */
@@ -210,6 +234,7 @@ public class ProjectAnalyser {
 	        for (int i = 0; i < listFile.length; i++) {
 	            if (!listFile[i].isDirectory() && listFile[i].toString().contains("pom.xml")) {
 	            	pomPath = listFile[i].getPath();
+	            	PathLocation.pomLocation = listFile[i].getPath().replace("pom.xml", "");
 	            	break;
 	            }
 	            else if (listFile[i].isDirectory())
