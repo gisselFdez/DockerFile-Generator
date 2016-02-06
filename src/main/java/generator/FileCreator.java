@@ -47,7 +47,7 @@ public class FileCreator {
 	}
 
 	public void createDockerfile(String gitURL, String pathToPom, String war) {
-		String split[] = gitURL.split("/");
+		String split[] = gitURL.contains("/") ? gitURL.split("/") : gitURL.split("\\");
 		String projectName = split[split.length-1];
 		projectName = projectName.substring(0, projectName.indexOf("."));
 		
