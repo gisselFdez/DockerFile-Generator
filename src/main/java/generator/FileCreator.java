@@ -46,9 +46,19 @@ public class FileCreator {
 		}
 	}
 
-	public Boolean createDockerfile(String urlSources, String pathToPom, String filename, String typeProject, String mainClass) {
+	/**
+	 * 
+	 * @param urlSources le chemin vers les sources du projet
+	 * @param pathToPom le chemin vers le pom depuis la racine du projet
+	 * @param filename le nom du fichier genere (artifactId)
+	 * @param version la version du fichier genere
+	 * @param typeProject le type de projet (war ou jar)
+	 * @param mainClass la classe Main du projet
+	 * @return
+	 */
+	public Boolean createDockerfile(String urlSources, String pathToPom, String filename, String version, String typeProject, String mainClass) {
 		String projectName = filename;
-		
+
 		try {
 			BufferedWriter output = new BufferedWriter(new FileWriter(this.file));
 
@@ -68,6 +78,7 @@ public class FileCreator {
 			output.write(newLine());
 			output.write(copySourcesCommand(urlSources, projectName));
 			output.write(newLine());
+
 			if (typeProject.equals("war")) {
 				output.write(generateWar(projectName, pathToPom, filename));
 			} else if (typeProject.equals("jar")) {
@@ -75,6 +86,7 @@ public class FileCreator {
 			} else {
 				System.out.println("Unknown format (accepted : .war and .jar files).");
 			}
+
 			output.write(newLine());
 			output.write(createCmd());
 
@@ -151,7 +163,7 @@ public class FileCreator {
 		return "#Copy sources\n"
 				+ "COPY " + url + " /" + projectName;
 	}
-	
+
 	private String generateWar(String projectName, String pathToPom, String warFileName) {
 		String command = "# Generate and copy war\n" + "RUN ";
 		if (pathToPom != null || pathToPom != "") {
@@ -161,17 +173,17 @@ public class FileCreator {
 				+ "cp target/" + warFileName + ".war ~/../../var/lib/tomcat7/webapps/";
 		return command;
 	}
-	
+
 	private String generateJar(String projectName, String pathToPom, String jarFileName, String mainClass) {
 		String command = "# Generate JAR file\n"
 				+ "RUN ";
 		if (pathToPom != null || pathToPom != "") {
 			command += "cd "+ projectName + "/" + pathToPom + " && ";
 		}
-		command += "mvn clean install -DskipTests";
+		command += "mvn clean install -DskipTests && java -jar ";
 		return command;
 	}
-	
+
 	private String createCmd() {
 		return "# Run terminal"
 				+ "\n" + Docker_cmd;

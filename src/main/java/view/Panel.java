@@ -183,10 +183,11 @@ public class Panel extends JPanel {
             	//generate docker file
         		String gitURL = PathLocation.location;//PathLocation.location;//"https://github.com/gisselFdez/ICSE-2013-TestEvol.git";
         		String pathToPom = PathLocation.pomLocation.replace(PathLocation.location, "");// where is the pom.xml file ?
-        		String war = analyser.getArtifactId(); // the name of the war file generated
+        		String artifactId = analyser.getArtifactId(); // the name of the war file generated
+        		String version = "0.0.1-SNAPSHOT";
         		
         		FileCreator fileCreator = new FileCreator(plugins);
-        		fileCreator.createDockerfile(gitURL, pathToPom, war, typeProject, main);
+        		fileCreator.createDockerfile(gitURL, pathToPom, artifactId, version, typeProject, main);
             }
         });
 		JLabel lblResult = new JLabel();
