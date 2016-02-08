@@ -46,10 +46,8 @@ public class FileCreator {
 		}
 	}
 
-	public void createDockerfile(String urlSources, String pathToPom, String war,String typeProject) {
-//		String split[] = gitURL.contains("/") ? gitURL.split("/") : gitURL.split("\\");
-//		String projectName = split[split.length-1];
-		String projectName = war;//projectName.substring(0, projectName.indexOf("."));
+	public Boolean createDockerfile(String urlSources, String pathToPom, String war,String typeProject) {
+		String projectName = war;
 		
 		try {
 			BufferedWriter output = new BufferedWriter(new FileWriter(this.file));
@@ -75,8 +73,10 @@ public class FileCreator {
 			output.write(createCmd());
 
 			output.close();
+			return true;
 		} catch (IOException e) {
 			e.printStackTrace();
+			return false;
 		}
 	}
 
