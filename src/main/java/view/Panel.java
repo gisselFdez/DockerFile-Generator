@@ -191,7 +191,7 @@ public class Panel extends JPanel {
         		
         		FileCreator fileCreator = new FileCreator(plugins);
 
-        		if(fileCreator.createDockerfile(gitURL, pathToPom, artifactId, version, typeProject, main)){
+        		if(fileCreator.createDockerfile(gitURL, pathToPom, artifactId, version, typeProject, main, "1.8")){
         			if(typeProject.equals("war"))
         				lblResult.setText("<html>Dockerfile succesfully generated!<br>"+
         						"To build the dockerfile image:<br>"+

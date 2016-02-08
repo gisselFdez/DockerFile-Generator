@@ -17,7 +17,7 @@ public class FileCreator {
 	private static final String path = "";
 	private static final String filename = "Dockerfile";
 
-	private static String Docker_from = "FROM java:7"; // Default: we use JDK1.7
+	private static String Docker_from = "FROM java:";
 	private static String Docker_maintainer = "MAINTAINER ";
 	private static String Docker_volume = "VOLUME /volume/"; // attach volume
 	private static String Docker_run = "RUN \\";
@@ -65,25 +65,12 @@ public class FileCreator {
 
 			output.write(getHeader());
 
-			output.write(createBaseImage());
+			output.write(createBaseImage(jdk));
 			output.write(newLine());
 			output.write(createMaintainerInfos("Pauline", "pauline@test.com"));
 			output.write(newLine());
 			output.write(createUpdateAndInstallCommand());
 			output.write(newLine());
-
-			// If the project uses another JDK from JDK1.7
-			switch (jdk) {
-				case "1.6":
-					output.write(installJdkCommand("6"));
-					break;
-				case "1.8":
-					output.write(installJdkCommand("8"));
-					break;
-				default:
-					break;
-			}
-
 //			output.write(Docker_env);
 			output.write(newLine());
 			output.write(createVolume("wd"));
@@ -128,8 +115,26 @@ public class FileCreator {
 	 * CREATE DOCKER'S COMMANDS
 	 *********************************************************************************************/
 
-	private String createBaseImage() {
-		return "# Pull base image" + "\n" + Docker_from;
+	/**
+	 * Create command to pull an image from the good JDK (JDK1.7 as default)
+	 * @param jdk the version
+	 * @return the command
+	 */
+	private String createBaseImage(String jdk) {
+		String command = "# Pull base image" + "\n" + Docker_from;
+
+		switch (jdk) {
+		case "1.6":
+			command += "6";
+			break;
+		case "1.8":
+			command += "8";
+			break;
+		default:
+			command += "7";
+			break;
+		}
+		return command;
 	}
 
 	private String createMaintainerInfos(String name, String mail) {
@@ -160,22 +165,6 @@ public class FileCreator {
 			}
 		}
 		
-		return command;
-	}
-
-	/**
-	 * Create the command to install another jdk
-	 * @param jdk the JDK version to install
-	 * @return the command
-	 */
-	private String installJdkCommand(String jdk) {
-		String command = "# Install another JDK\n";
-		command += Docker_run
-				+ "\n   add-apt-repository ppa:webupd8team/java && \\"
-				+ "\n   apt-get update && \\"
-				+ "\n   apt-get install oracle-java" + jdk + "-installer && \\"
-				+ "\n   update-java-alternatives -s java-" + jdk + "-oracle";
-
 		return command;
 	}
 
