@@ -1,11 +1,11 @@
-package main;
+package main.java.main;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import generator.FileCreator;
-import model.Plugin;
-import view.View;
+import main.java.generator.FileCreator;
+import main.java.model.Plugin;
+import main.java.view.View;
 
 
 public class GeneratorMain {	

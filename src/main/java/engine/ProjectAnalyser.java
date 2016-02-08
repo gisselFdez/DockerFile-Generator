@@ -1,4 +1,4 @@
-package engine;
+package main.java.engine;
 
 import java.io.File;
 import java.io.IOException;
@@ -16,9 +16,9 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
-import model.Dependency;
-import model.Plugin;
-import util.PathLocation;
+import main.java.model.Dependency;
+import main.java.model.Plugin;
+import main.java.util.PathLocation;
 
 /**
  * This class contain the methods that analyse the code from a project

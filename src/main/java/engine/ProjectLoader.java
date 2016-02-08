@@ -1,4 +1,4 @@
-package engine;
+package main.java.engine;
 
 import java.io.File;
 import java.io.IOException;
@@ -10,7 +10,7 @@ import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.internal.storage.file.FileRepository;
 import org.eclipse.jgit.lib.Repository;
 
-import util.PathLocation;
+import main.java.util.PathLocation;
 
 /**
  * 
@@ -70,7 +70,7 @@ public class ProjectLoader {
 	 * @return
 	 */
 	private void setLocalPath(){
-		PathLocation.location = System.getProperty("user.dir")+"\\test";
+		PathLocation.location = System.getProperty("user.dir")+"/test";
 	}
 	
 	/**

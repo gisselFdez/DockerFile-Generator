@@ -1,4 +1,4 @@
-package view;
+package main.java.view;
 
 import java.awt.Color;
 import java.awt.Component;
@@ -17,14 +17,14 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.border.TitledBorder;
 
-import engine.ProjectAnalyser;
-import engine.ProjectLoader;
-import generator.FileCreator;
-import model.Dependency;
-import model.Plugin;
-import processors.ClassProcessor;
+import main.java.engine.ProjectAnalyser;
+import main.java.engine.ProjectLoader;
+import main.java.generator.FileCreator;
+import main.java.model.Dependency;
+import main.java.model.Plugin;
+import main.java.processors.ClassProcessor;
 import spoon.Launcher;
-import util.PathLocation;
+import main.java.util.PathLocation;
 
 public class Panel extends JPanel {
 
@@ -66,7 +66,7 @@ public class Panel extends JPanel {
 		lblProject.setBounds(20, 30, 100, 20);
 		JTextField txtProjectpPath = new JTextField("");
 		txtProjectpPath.setPreferredSize(new Dimension(250,20));
-		txtProjectpPath.setBounds(110, 30, 430, 20);
+		txtProjectpPath.setBounds(110, 30, 430, 30);
 		JLabel lblType = new JLabel("Type of Project");
 		lblType.setBounds(20, 60, 100, 20);
 		JComboBox cmbType = new JComboBox(new String[]{"Git", "Local project" });
@@ -152,8 +152,8 @@ public class Panel extends JPanel {
             	String main = getMain();
             	
             	//generate docker file
-        		String gitURL = PathLocation.gitLocation;//PathLocation.location;//"https://github.com/gisselFdez/ICSE-2013-TestEvol.git";
-        		String pathToPom = PathLocation.pomLocation;// where is the pom.xml file ?
+        		String gitURL = PathLocation.location;//PathLocation.location;//"https://github.com/gisselFdez/ICSE-2013-TestEvol.git";
+        		String pathToPom = PathLocation.pomLocation.replace(PathLocation.location, "");// where is the pom.xml file ?
         		String war = analyser.getArtifactId(); // the name of the war file generated
         		
         		FileCreator fileCreator = new FileCreator(plugins);
@@ -263,7 +263,7 @@ public class Panel extends JPanel {
 		Launcher launcher = new Launcher();
 		ClassProcessor processor = new ClassProcessor();
 		launcher.addProcessor(new ClassProcessor());
-		String path = System.getProperty("user.dir")+"\\test";
+		String path = System.getProperty("user.dir")+"/test";
         launcher.run(new String[] {"-i", path, "-x"});
         return processor.getMainClasses();
 	}

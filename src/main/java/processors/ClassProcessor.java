@@ -1,4 +1,4 @@
-package processors;
+package main.java.processors;
 
 import java.util.ArrayList;
 import java.util.List;

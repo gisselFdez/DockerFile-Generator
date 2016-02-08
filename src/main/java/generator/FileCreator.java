@@ -1,4 +1,4 @@
-package generator;
+package main.java.generator;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -7,7 +7,7 @@ import java.io.IOException;
 import java.util.Date;
 import java.util.List;
 
-import model.Plugin;
+import main.java.model.Plugin;
 
 
 public class FileCreator {
@@ -46,10 +46,10 @@ public class FileCreator {
 		}
 	}
 
-	public void createDockerfile(String gitURL, String pathToPom, String war) {
-		String split[] = gitURL.contains("/") ? gitURL.split("/") : gitURL.split("\\");
-		String projectName = split[split.length-1];
-		projectName = projectName.substring(0, projectName.indexOf("."));
+	public void createDockerfile(String urlSources, String pathToPom, String war) {
+//		String split[] = gitURL.contains("/") ? gitURL.split("/") : gitURL.split("\\");
+//		String projectName = split[split.length-1];
+		String projectName = war;//projectName.substring(0, projectName.indexOf("."));
 		
 		try {
 			BufferedWriter output = new BufferedWriter(new FileWriter(this.file));
@@ -68,7 +68,7 @@ public class FileCreator {
 			output.write(newLine());
 			output.write(createWorkingDirectory());
 			output.write(newLine());
-			output.write(createGitCloneCommand(gitURL));
+			output.write(copySourcesCommand(urlSources, projectName));
 			output.write(newLine());
 			output.write(generateWar(projectName, pathToPom, war));
 			output.write(newLine());
@@ -141,9 +141,9 @@ public class FileCreator {
 				+ "\nWORKDIR /local/" + this.volume;
 	}
 
-	private String createGitCloneCommand(String url) {
-		return "# Clone the sources from repository\n"
-				+ "RUN git clone " + url;
+	private String copySourcesCommand(String url, String projectName) {
+		return "#Copy sources\n"
+				+ "COPY " + url + " /" + projectName;
 	}
 	
 	private String generateWar(String projectName, String pathToPom, String warFileName) {
