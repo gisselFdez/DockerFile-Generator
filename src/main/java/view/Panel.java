@@ -186,7 +186,7 @@ public class Panel extends JPanel {
         		String gitURL = PathLocation.location;//PathLocation.location;//"https://github.com/gisselFdez/ICSE-2013-TestEvol.git";
         		String pathToPom = PathLocation.pomLocation.replace(PathLocation.location, "");// where is the pom.xml file ?
         		String artifactId = analyser.getArtifactId(); // the name of the war file generated
-        		String version = "0.0.1-SNAPSHOT";
+        		String version = analyser.getVersion();
         		
         		FileCreator fileCreator = new FileCreator(plugins);
 
