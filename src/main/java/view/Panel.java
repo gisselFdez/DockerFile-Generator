@@ -186,7 +186,7 @@ public class Panel extends JPanel {
         		String war = analyser.getArtifactId(); // the name of the war file generated
         		
         		FileCreator fileCreator = new FileCreator(plugins);
-        		fileCreator.createDockerfile(gitURL, pathToPom, war, typeProject);
+        		fileCreator.createDockerfile(gitURL, pathToPom, war, typeProject, main);
             }
         });
 		JLabel lblResult = new JLabel();
