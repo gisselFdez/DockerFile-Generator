@@ -169,7 +169,7 @@ public class ProjectAnalyser {
 	}
 	
 	/**
-	 * Get the main class specified in the pom.xml file
+	 * Get the artifactID specified in the pom.xml file
 	 * @return
 	 */
 	public String getArtifactId(){
@@ -193,7 +193,7 @@ public class ProjectAnalyser {
 	}
 	
 	/**
-	 * Get the main class specified in the pom.xml file
+	 * Get the version specified in the pom.xml file
 	 * @return
 	 */
 	public String getVersion(){
@@ -213,6 +213,30 @@ public class ProjectAnalyser {
 	    } catch (NullPointerException | ParserConfigurationException | SAXException | IOException e) {
 	    	e.printStackTrace();
 	    	return version;
+	    }
+	}
+	
+	/**
+	 * Get the target specified in the pom.xml file
+	 * @return
+	 */
+	public String getTarget(){
+		String target="";
+		//read the main class from pom.xml
+		 try {			 
+			File fXmlFile = new File(pomPath);
+			DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+			DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
+			Document doc = dBuilder.parse(fXmlFile);
+				
+			if(doc.getElementsByTagName("target").getLength()!=0)
+				target = doc.getElementsByTagName("target").item(0).getTextContent();
+			
+			return target;
+			
+	    } catch (NullPointerException | ParserConfigurationException | SAXException | IOException e) {
+	    	e.printStackTrace();
+	    	return target;
 	    }
 	}
 	
