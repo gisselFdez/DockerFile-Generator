@@ -6,7 +6,6 @@ import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,6 +13,7 @@ import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JRadioButton;
 import javax.swing.JTextField;
 import javax.swing.border.TitledBorder;
 
@@ -23,8 +23,8 @@ import main.java.generator.FileCreator;
 import main.java.model.Dependency;
 import main.java.model.Plugin;
 import main.java.processors.ClassProcessor;
-import spoon.Launcher;
 import main.java.util.PathLocation;
+import spoon.Launcher;
 
 public class Panel extends JPanel {
 
@@ -34,6 +34,7 @@ public class Panel extends JPanel {
 	JPanel pluginPanel;
 	JPanel mainsPanel;
 	JPanel resultsPanel;
+	static String typeProject ="war";
 	
 	public Panel() {
 		this.loader = new ProjectLoader();
@@ -57,7 +58,7 @@ public class Panel extends JPanel {
 	 */
 	private void initProjectPanel(){
 		this.projectPanel = new JPanel();
-		this.projectPanel.setPreferredSize(new Dimension(550,130));
+		this.projectPanel.setPreferredSize(new Dimension(550,180));
 		this.projectPanel.setBorder(new TitledBorder("Project Information"));
 		this.projectPanel.setLayout(null);
 		
@@ -74,8 +75,34 @@ public class Panel extends JPanel {
 		JLabel lblError = new JLabel("");
 		lblError.setForeground(Color.red);
 		lblError.setBounds(220, 60, 250, 20);
+		JRadioButton rBtnWar = new JRadioButton("Web application");
+		rBtnWar.addActionListener(new ActionListener(){
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				typeProject = "war";
+			}
+			
+		});
+		rBtnWar.setSelected(true);
+		rBtnWar.setBounds(110, 110	, 120, 30);
+		
+		
+		JRadioButton rBtnJar = new JRadioButton("Java application");
+		rBtnJar.addActionListener(new ActionListener(){
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				typeProject = "jar";
+			}
+			
+		});
+		rBtnJar.setBounds(240, 110	, 120, 30);
+		
 		JButton btnLoad = new JButton("Load Project");
-		btnLoad.setBounds(110, 90, 100, 30);
+		btnLoad.setBounds(110, 150, 100, 30);
 		btnLoad.addActionListener(new ActionListener() {			 
             public void actionPerformed(ActionEvent e)
             {            	
@@ -116,6 +143,8 @@ public class Panel extends JPanel {
 		this.projectPanel.add(cmbType);
 		this.projectPanel.add(btnLoad);
 		this.projectPanel.add(lblError);
+		this.projectPanel.add(rBtnWar);
+		this.projectPanel.add(rBtnJar);
 	}
 	
 	/**
@@ -157,7 +186,7 @@ public class Panel extends JPanel {
         		String war = analyser.getArtifactId(); // the name of the war file generated
         		
         		FileCreator fileCreator = new FileCreator(plugins);
-        		fileCreator.createDockerfile(gitURL, pathToPom, war);
+        		fileCreator.createDockerfile(gitURL, pathToPom, war, typeProject);
             }
         });
 		JLabel lblResult = new JLabel();

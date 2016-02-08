@@ -143,7 +143,7 @@ public class FileCreator {
 
 	private String copySourcesCommand(String url, String projectName) {
 		return "#Copy sources\n"
-				+ "COPY " + url + " /local/" + this.volume + "/" + projectName;
+				+ "COPY " + url + " /" + projectName;
 	}
 	
 	private String generateWar(String projectName, String pathToPom, String warFileName) {
