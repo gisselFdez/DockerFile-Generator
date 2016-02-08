@@ -17,7 +17,7 @@ public class FileCreator {
 	private static final String path = "";
 	private static final String filename = "Dockerfile";
 
-	private static String Docker_from = "FROM java:7";
+	private static String Docker_from = "FROM java:7"; // Default: we use JDK1.7
 	private static String Docker_maintainer = "MAINTAINER ";
 	private static String Docker_volume = "VOLUME /volume/"; // attach volume
 	private static String Docker_run = "RUN \\";
@@ -56,7 +56,8 @@ public class FileCreator {
 	 * @param mainClass la classe Main du projet
 	 * @return
 	 */
-	public Boolean createDockerfile(String urlSources, String pathToPom, String filename, String version, String typeProject, String mainClass) {
+	public Boolean createDockerfile(String urlSources, String pathToPom, String filename, String version,
+			String typeProject, String mainClass, String jdk) {
 		String projectName = filename;
 
 		try {
@@ -70,6 +71,19 @@ public class FileCreator {
 			output.write(newLine());
 			output.write(createUpdateAndInstallCommand());
 			output.write(newLine());
+
+			// If the project uses another JDK from JDK1.7
+			switch (jdk) {
+				case "1.6":
+					output.write(installJdkCommand("6"));
+					break;
+				case "1.8":
+					output.write(installJdkCommand("8"));
+					break;
+				default:
+					break;
+			}
+
 //			output.write(Docker_env);
 			output.write(newLine());
 			output.write(createVolume("wd"));
@@ -79,6 +93,7 @@ public class FileCreator {
 			output.write(copySourcesCommand(urlSources, projectName));
 			output.write(newLine());
 
+			// Different commands for generating war or jar file
 			if (typeProject.equals("war")) {
 				output.write(generateWar(projectName, pathToPom, filename));
 			} else if (typeProject.equals("jar")) {
@@ -124,6 +139,10 @@ public class FileCreator {
 		return "";
 	}
 
+	/**
+	 * Update and install basic tools
+	 * @return the command
+	 */
 	private String createUpdateAndInstallCommand() {
 		String command = "# Update and install\n"
 				+ Docker_run 
@@ -141,6 +160,22 @@ public class FileCreator {
 			}
 		}
 		
+		return command;
+	}
+
+	/**
+	 * Create the command to install another jdk
+	 * @param jdk the JDK version to install
+	 * @return the command
+	 */
+	private String installJdkCommand(String jdk) {
+		String command = "# Install another JDK\n";
+		command += Docker_run
+				+ "\n   add-apt-repository ppa:webupd8team/java && \\"
+				+ "\n   apt-get update && \\"
+				+ "\n   apt-get install oracle-java" + jdk + "-installer && \\"
+				+ "\n   update-java-alternatives -s java-" + jdk + "-oracle";
+
 		return command;
 	}
 
