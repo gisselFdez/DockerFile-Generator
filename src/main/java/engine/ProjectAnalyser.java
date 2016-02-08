@@ -124,8 +124,10 @@ public class ProjectAnalyser {
 				if (nNode.getNodeType() == Node.ELEMENT_NODE) {
 					Plugin plugin = new Plugin();
 					
-					Element eElement = (Element) nNode;					
-					plugin.setGroupId(eElement.getElementsByTagName("groupId").item(0).getTextContent());
+					Element eElement = (Element) nNode;	
+					if(eElement.getElementsByTagName("groupId").getLength()!=0){
+						plugin.setGroupId(eElement.getElementsByTagName("groupId").item(0).getTextContent());
+					}					
 					plugin.setArtifactId(eElement.getElementsByTagName("artifactId").item(0).getTextContent());
 					if(eElement.getElementsByTagName("version").getLength()!=0){
 						plugin.setVersion(eElement.getElementsByTagName("version").item(0).getTextContent());
@@ -253,15 +255,20 @@ public class ProjectAnalyser {
 			String groupId = plugin.getGroupId();
 			List<Plugin> repeated = new ArrayList<Plugin>();
 			Boolean isRepeted = false;
-			for(int j=0;j<this.plugins.size();j++){
-				Plugin plug = this.plugins.get(j);
-				String group = plug.getGroupId();
-				if(groupId.equals(group) && i!=j){
-					isRepeted = true;
-					repeated.add(plug);
-					repeated.add(plugin);
-				}					
-			}
+			
+			if(groupId !=null)
+				if(!groupId.equals("org.apache.maven.plugins")){
+					for(int j=0;j<this.plugins.size();j++){
+						Plugin plug = this.plugins.get(j);
+						String group = plug.getGroupId();
+						if(groupId!=null)
+							if(groupId.equals(group) && i!=j){
+								isRepeted = true;
+								repeated.add(plug);
+								repeated.add(plugin);
+							}					
+					}
+				}
 			
 			if(isRepeted && !repeatedGroup.contains(groupId)){
 				hasRepeatedPlugins =true;
