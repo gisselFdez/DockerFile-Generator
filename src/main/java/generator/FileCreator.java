@@ -159,28 +159,53 @@ public class FileCreator {
 				+ "\nWORKDIR /local/" + this.volume;
 	}
 
+	/**
+	 * Copy sources into the container Docker
+	 * @param url path to the sources
+	 * @param projectName name of the directory into the container
+	 * @return the command
+	 */
 	private String copySourcesCommand(String url, String projectName) {
-		return "#Copy sources\n"
-				+ "COPY " + url + " /" + projectName;
+		return "# Add sources\n"
+				+ "ADD " + url + " /local/" + this.volume + "/" + projectName;
 	}
 
+	/**
+	 * Generate war file and copy it into the server directory
+	 * @param projectName the sources directory into the container
+	 * @param pathToPom the path to the pom.xml file
+	 * @param warFileName the name of the generated war file
+	 * @return the command
+	 */
 	private String generateWar(String projectName, String pathToPom, String warFileName) {
 		String command = "# Generate and copy war\n" + "RUN ";
 		if (pathToPom != null || pathToPom != "") {
-			command += "cd "+ projectName + "/" + pathToPom + " && ";
+			// move to the sources directory
+			command += "cd " + projectName + "/" + pathToPom + " && ";
 		}
+		// compile project
 		command += "mvn clean package -DskipTests && "
+				// copy the generated war
 				+ "cp target/" + warFileName + ".war ~/../../var/lib/tomcat7/webapps/";
 		return command;
 	}
 
+	/**
+	 * Generate jar file and launch it
+	 * @param projectName the sources directory into the container
+	 * @param pathToPom the path to the pom.xml file
+	 * @param jarFileName the name of the generated jar file
+	 * @param version the version of the compiled project
+	 * @param mainClass the name of the project main class
+	 * @return the command
+	 */
 	private String generateJar(String projectName, String pathToPom, String jarFileName, String version, String mainClass) {
 		String command = "# Generate JAR file\n"
 				+ "RUN ";
 		if (pathToPom != null || pathToPom != "") {
 			command += "cd "+ projectName + "/" + pathToPom + " && ";
 		}
-		command += "mvn clean install -DskipTests && java -jar " + jarFileName + version + ".jar";
+		command += "mvn clean install -DskipTests && java -jar " + jarFileName + "-" + version + ".jar";
 		return command;
 	}
 
