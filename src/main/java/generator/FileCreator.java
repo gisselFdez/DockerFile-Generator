@@ -180,7 +180,7 @@ public class FileCreator {
 		if (pathToPom != null || pathToPom != "") {
 			command += "cd "+ projectName + "/" + pathToPom + " && ";
 		}
-		command += "mvn clean install -DskipTests && java -jar " + jarFileName + version + ".jar";
+		command += "mvn clean install -DskipTests && java -jar " + jarFileName + "-" + version + ".jar";
 		return command;
 	}
 
