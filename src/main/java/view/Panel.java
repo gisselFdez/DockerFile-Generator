@@ -24,6 +24,7 @@ import main.java.model.Dependency;
 import main.java.model.Plugin;
 import main.java.processors.ClassProcessor;
 import main.java.util.PathLocation;
+
 import spoon.Launcher;
 
 public class Panel extends JPanel {
