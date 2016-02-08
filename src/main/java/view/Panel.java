@@ -152,7 +152,8 @@ public class Panel extends JPanel {
 	 */
 	private void initDockerFileConfiguration(){		
 		initPluginPanel();
-		initMainsPanel();
+		if(typeProject.equals("jar"))
+			initMainsPanel();
 		initResultsPanel();
 		View.frame.revalidate();
 	}
@@ -169,7 +170,7 @@ public class Panel extends JPanel {
 		JLabel lblResult = new JLabel();
 		lblResult.setBounds(20, 50, 550, 100);
 		JButton btnGenerate = new JButton("Generate Dockerfile");		
-		btnGenerate.setBounds(200, 20, 150, 30);
+		btnGenerate.setBounds(200, 20, 180, 30);
 		btnGenerate.addActionListener(new ActionListener() {			 
             public void actionPerformed(ActionEvent e)
             {
@@ -192,23 +193,21 @@ public class Panel extends JPanel {
 
         		if(fileCreator.createDockerfile(gitURL, pathToPom, artifactId, version, typeProject, main)){
         			if(typeProject.equals("war"))
-        				lblResult.setText("Dockerfile succesfully generated!\n"+
-        						"To build the dockerfile image:\n"+
-        						"\tdocker build -t [imageName] .\n"+
-        						"To run the dockerfile image:\n"+
-        						"\tdocker run -it --privileged=true -p 8080:8080 [imageName]");
+        				lblResult.setText("<html>Dockerfile succesfully generated!<br>"+
+        						"To build the dockerfile image:<br>"+
+        						"      docker build -t [imageName] .<br>"+
+        						"To run the dockerfile image:<br>"+
+        						"      docker run -it --privileged=true -p 8080:8080 [imageName]</html>");
         			else
-        				lblResult.setText("Dockerfile succesfully generated!\n"+
-        						"To build the dockerfile image:\n"+
-        						"\tdocker build -t [imageName] .\n"+
-        						"To run the dockerfile image:\n"+
-        						"\tdocker run -it [imageName]");
+        				lblResult.setText("<html>Dockerfile succesfully generated!<br>"+
+        						"To build the dockerfile image:<br>"+
+        						"      docker build -t [imageName] .<br>"+
+        						"To run the dockerfile image:<br>"+
+        						"      docker run -it [imageName]</html>");
         		}
         		else{
         			lblResult.setText("Dockerfile NOT generated!");
-        		}
-
-        		
+        		}  		
 
             }
         });
@@ -230,23 +229,24 @@ public class Panel extends JPanel {
 			this.pluginPanel = new JPanel();
 			this.pluginPanel.setLayout(null);
 			this.pluginPanel.setBorder(new TitledBorder("Plugins"));
-			int posy = 60;
+			int posy = 65;
 			
-			JLabel lblPlugin = new JLabel("Some plugins on the pom.xml have the same groupId, please select the artifactId you want to include.");			
-			lblPlugin.setBounds(20, 20, 540, 40);
+			JLabel lblPlugin = new JLabel("<html>Some plugins on the pom.xml have the same groupId,"+
+			"<br> please select the artifactId you want to include.</html>");			
+			lblPlugin.setBounds(20, 20, 540, 50);
 			this.pluginPanel.add(lblPlugin);
 			
 			JComboBox cmbPlugin;
 			for(List<Plugin> list: repeated){
 				cmbPlugin = new JComboBox();
-				cmbPlugin.setBounds(110, posy, 250, 20);
+				cmbPlugin.setBounds(150, posy, 250, 30);
 				for(Plugin s: list){
 					cmbPlugin.addItem(s.getArtifactId());
 				}
 				this.pluginPanel.add(cmbPlugin);
 				posy = posy+30;
 			}	
-			this.pluginPanel.setPreferredSize(new Dimension(550,posy+10));
+			this.pluginPanel.setPreferredSize(new Dimension(600,posy+10));
 			
 			this.add(this.pluginPanel);
 			this.repaint();
@@ -263,7 +263,7 @@ public class Panel extends JPanel {
 			List<String> mainsList = runProcessor(); 
 			if(!mainsList.isEmpty()){
 				this.mainsPanel = new JPanel();
-				this.mainsPanel.setPreferredSize(new Dimension(550,100));
+				this.mainsPanel.setPreferredSize(new Dimension(600,100));
 				this.mainsPanel.setBorder(new TitledBorder("Main Class"));
 				this.mainsPanel.setLayout(null);
 				
@@ -272,7 +272,7 @@ public class Panel extends JPanel {
 				lblMain.setBounds(20, 20, 540, 40);
 				this.mainsPanel.add(lblMain);
 				JComboBox cmbMains = new JComboBox();
-				cmbMains.setBounds(110, 60, 250, 20);
+				cmbMains.setBounds(150, 60, 250, 30);
 				
 				for(String main: mainsList){
 					cmbMains.addItem(main);
