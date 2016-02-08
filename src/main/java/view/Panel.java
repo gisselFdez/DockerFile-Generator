@@ -9,6 +9,7 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
@@ -66,41 +67,43 @@ public class Panel extends JPanel {
 		//initialize components
 		JLabel lblProject = new JLabel("Project location");
 		lblProject.setBounds(20, 30, 150, 20);
+		
 		JTextField txtProjectpPath = new JTextField("");
 		txtProjectpPath.setPreferredSize(new Dimension(250,30));
 		txtProjectpPath.setBounds(150, 30, 430, 30);
+		
 		JLabel lblType = new JLabel("Type of Project");
 		lblType.setBounds(20, 60, 150, 20);
+		
 		JComboBox cmbType = new JComboBox(new String[]{"Git", "Local project" });
 		cmbType.setBounds(150, 60, 150, 30);
+		
 		JLabel lblError = new JLabel("");
 		lblError.setForeground(Color.red);
 		lblError.setBounds(300, 60, 250, 30);
+		
 		JRadioButton rBtnWar = new JRadioButton("Web application");
 		rBtnWar.addActionListener(new ActionListener(){
-
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				// TODO Auto-generated method stub
 				typeProject = "war";
 			}
-			
 		});
 		rBtnWar.setSelected(true);
 		rBtnWar.setBounds(110, 110	, 150, 30);
 		
-		
 		JRadioButton rBtnJar = new JRadioButton("Java application");
 		rBtnJar.addActionListener(new ActionListener(){
-
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				// TODO Auto-generated method stub
 				typeProject = "jar";
 			}
-			
 		});
 		rBtnJar.setBounds(260, 110	, 150, 30);
+		
+		ButtonGroup group = new ButtonGroup();
+		group.add(rBtnWar);
+		group.add(rBtnJar);
 		
 		JButton btnLoad = new JButton("Load Project");
 		btnLoad.setBounds(150, 150, 100, 30);
