@@ -47,7 +47,7 @@ public class Panel extends JPanel {
 	 */
 	private void init() {
 	    this.setLayout(new FlowLayout());
-	    this.setPreferredSize(new Dimension(550, 450));
+	    this.setPreferredSize(new Dimension(600, 500));
 	    
 	    initProjectPanel();
 	    this.add(this.projectPanel);
@@ -58,23 +58,23 @@ public class Panel extends JPanel {
 	 */
 	private void initProjectPanel(){
 		this.projectPanel = new JPanel();
-		this.projectPanel.setPreferredSize(new Dimension(550,180));
+		this.projectPanel.setPreferredSize(new Dimension(600,200));
 		this.projectPanel.setBorder(new TitledBorder("Project Information"));
 		this.projectPanel.setLayout(null);
 		
 		//initialize components
 		JLabel lblProject = new JLabel("Project location");
-		lblProject.setBounds(20, 30, 100, 20);
+		lblProject.setBounds(20, 30, 150, 20);
 		JTextField txtProjectpPath = new JTextField("");
-		txtProjectpPath.setPreferredSize(new Dimension(250,20));
-		txtProjectpPath.setBounds(110, 30, 430, 30);
+		txtProjectpPath.setPreferredSize(new Dimension(250,30));
+		txtProjectpPath.setBounds(150, 30, 430, 30);
 		JLabel lblType = new JLabel("Type of Project");
-		lblType.setBounds(20, 60, 100, 20);
+		lblType.setBounds(20, 60, 150, 20);
 		JComboBox cmbType = new JComboBox(new String[]{"Git", "Local project" });
-		cmbType.setBounds(110, 60, 100, 20);
+		cmbType.setBounds(150, 60, 150, 30);
 		JLabel lblError = new JLabel("");
 		lblError.setForeground(Color.red);
-		lblError.setBounds(220, 60, 250, 20);
+		lblError.setBounds(300, 60, 250, 30);
 		JRadioButton rBtnWar = new JRadioButton("Web application");
 		rBtnWar.addActionListener(new ActionListener(){
 
@@ -86,7 +86,7 @@ public class Panel extends JPanel {
 			
 		});
 		rBtnWar.setSelected(true);
-		rBtnWar.setBounds(110, 110	, 120, 30);
+		rBtnWar.setBounds(110, 110	, 150, 30);
 		
 		
 		JRadioButton rBtnJar = new JRadioButton("Java application");
@@ -99,10 +99,10 @@ public class Panel extends JPanel {
 			}
 			
 		});
-		rBtnJar.setBounds(240, 110	, 120, 30);
+		rBtnJar.setBounds(260, 110	, 150, 30);
 		
 		JButton btnLoad = new JButton("Load Project");
-		btnLoad.setBounds(110, 150, 100, 30);
+		btnLoad.setBounds(150, 150, 100, 30);
 		btnLoad.addActionListener(new ActionListener() {			 
             public void actionPerformed(ActionEvent e)
             {            	
@@ -162,11 +162,13 @@ public class Panel extends JPanel {
 	 */
 	private void initResultsPanel(){
 		this.resultsPanel = new JPanel();
-		this.resultsPanel.setPreferredSize(new Dimension(550,50));
+		this.resultsPanel.setPreferredSize(new Dimension(600,150));
 		this.resultsPanel.setLayout(null);
 		
 		//initialize components
-		JButton btnGenerate = new JButton("Generate Dockerfile");
+		JLabel lblResult = new JLabel();
+		lblResult.setBounds(20, 50, 550, 100);
+		JButton btnGenerate = new JButton("Generate Dockerfile");		
 		btnGenerate.setBounds(200, 20, 150, 30);
 		btnGenerate.addActionListener(new ActionListener() {			 
             public void actionPerformed(ActionEvent e)
@@ -186,10 +188,26 @@ public class Panel extends JPanel {
         		String war = analyser.getArtifactId(); // the name of the war file generated
         		
         		FileCreator fileCreator = new FileCreator(plugins);
-        		fileCreator.createDockerfile(gitURL, pathToPom, war, typeProject);
+        		if(fileCreator.createDockerfile(gitURL, pathToPom, war, typeProject)){
+        			if(typeProject.equals("war"))
+        				lblResult.setText("Dockerfile succesfully generated!\n"+
+        						"To build the dockerfile image:\n"+
+        						"\tdocker build -t [imageName] .\n"+
+        						"To run the dockerfile image:\n"+
+        						"\tdocker run -it --privileged=true -p 8080:8080 [imageName]");
+        			else
+        				lblResult.setText("Dockerfile succesfully generated!\n"+
+        						"To build the dockerfile image:\n"+
+        						"\tdocker build -t [imageName] .\n"+
+        						"To run the dockerfile image:\n"+
+        						"\tdocker run -it [imageName]");
+        		}
+        		else{
+        			lblResult.setText("Dockerfile NOT generated!");
+        		}
             }
         });
-		JLabel lblResult = new JLabel();
+		
 		//add components
 		this.resultsPanel.add(btnGenerate);
 		this.resultsPanel.add(lblResult);
