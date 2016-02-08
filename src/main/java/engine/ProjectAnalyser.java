@@ -193,6 +193,30 @@ public class ProjectAnalyser {
 	}
 	
 	/**
+	 * Get the main class specified in the pom.xml file
+	 * @return
+	 */
+	public String getVersion(){
+		String version="";
+		//read the main class from pom.xml
+		 try {			 
+			File fXmlFile = new File(pomPath);
+			DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+			DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
+			Document doc = dBuilder.parse(fXmlFile);
+				
+			if(doc.getElementsByTagName("version").getLength()!=0)
+				version = doc.getElementsByTagName("version").item(0).getTextContent();
+			
+			return version;
+			
+	    } catch (NullPointerException | ParserConfigurationException | SAXException | IOException e) {
+	    	e.printStackTrace();
+	    	return version;
+	    }
+	}
+	
+	/**
 	 * Verify if a plugin is repeated
 	 * @return the list of repeated plugins
 	 */
