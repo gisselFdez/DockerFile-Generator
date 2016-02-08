@@ -82,7 +82,7 @@ public class FileCreator {
 			if (typeProject.equals("war")) {
 				output.write(generateWar(projectName, pathToPom, filename));
 			} else if (typeProject.equals("jar")) {
-				output.write(generateJar(projectName, pathToPom, filename, mainClass));
+				output.write(generateJar(projectName, pathToPom, filename, version, mainClass));
 			} else {
 				System.out.println("Unknown format (accepted : .war and .jar files).");
 			}
@@ -174,13 +174,13 @@ public class FileCreator {
 		return command;
 	}
 
-	private String generateJar(String projectName, String pathToPom, String jarFileName, String mainClass) {
+	private String generateJar(String projectName, String pathToPom, String jarFileName, String version, String mainClass) {
 		String command = "# Generate JAR file\n"
 				+ "RUN ";
 		if (pathToPom != null || pathToPom != "") {
 			command += "cd "+ projectName + "/" + pathToPom + " && ";
 		}
-		command += "mvn clean install -DskipTests && java -jar ";
+		command += "mvn clean install -DskipTests && java -jar " + jarFileName + version + ".jar";
 		return command;
 	}
 
