@@ -46,7 +46,7 @@ public class FileCreator {
 		}
 	}
 
-	public void createDockerfile(String urlSources, String pathToPom, String war) {
+	public void createDockerfile(String urlSources, String pathToPom, String war,String typeProject) {
 //		String split[] = gitURL.contains("/") ? gitURL.split("/") : gitURL.split("\\");
 //		String projectName = split[split.length-1];
 		String projectName = war;//projectName.substring(0, projectName.indexOf("."));
@@ -143,7 +143,7 @@ public class FileCreator {
 
 	private String copySourcesCommand(String url, String projectName) {
 		return "#Copy sources\n"
-				+ "COPY " + url + " /" + projectName;
+				+ "COPY " + url + " /local/" + this.volume + "/" + projectName;
 	}
 	
 	private String generateWar(String projectName, String pathToPom, String warFileName) {
@@ -153,6 +153,16 @@ public class FileCreator {
 		}
 		command += "mvn clean package -DskipTests && "
 				+ "cp target/" + warFileName + ".war ~/../../var/lib/tomcat7/webapps/";
+		return command;
+	}
+	
+	private String generateJar(String projectName, String pathToPom, String jarFileName, String mainClass) {
+		String command = "# Generate JAR file\n"
+				+ "RUN ";
+		if (pathToPom != null || pathToPom != "") {
+			command += "cd "+ projectName + "/" + pathToPom + " && ";
+		}
+		command += "mvn clean install -DskipTests && java -jar " + mainClass;
 		return command;
 	}
 	
